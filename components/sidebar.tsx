@@ -16,7 +16,7 @@ import Logo from "../public/twitter_logo.svg";
 
 export default function Sidebar() {
   return (
-    <div className="hidden sm:flex flex-col p-2 xl:items-start fixed h-full">
+    <div className="hidden sm:flex flex-col p-2 xl:items-start fixed h-full xl:ml-24">
       {/**twiter icons as a logo from react icons*/}
       <div className="hoverEffect  p-0 flex hover:bg-blue-100 xl:px-1">
         <Image src={Logo} height={30} width={30} alt="Twitter Logo" />

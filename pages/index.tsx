@@ -7,8 +7,9 @@ import Widget from "@/components/widget";
 //import styles from "@/styles/Home.module.css";
 
 //const inter = Inter({ subsets: ["latin"] });
+import { HomeProps } from "@/type/postType";
 
-export default function Home() {
+export default function Home({ newsData }: HomeProps) {
   return (
     <>
       <Head>
@@ -17,14 +18,26 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/twitter_logo.svg" />
       </Head>
-      <main className="flex min-h-screen max-w-7xl mx-auto ">
+      <main className="flex min-h-screen mx-auto ">
         {/** sidebar here */}
         <Sidebar />
         {/** Feed Section */}
         <Feed />
         {/** Widgets */}
-        <Widget />
+        <Widget newsData={newsData.articles} />
       </main>
     </>
   );
+}
+
+// https://saurav.tech/NewsAPI/top-headlines/category/health/in.json
+export async function getServerSideProps() {
+  const newsData = await fetch(
+    "https://saurav.tech/NewsAPI/top-headlines/category/business/us.json"
+  ).then((res) => res.json());
+  return {
+    props: {
+      newsData,
+    },
+  };
 }
