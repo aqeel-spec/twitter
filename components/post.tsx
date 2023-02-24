@@ -25,9 +25,9 @@ export default function Post({ post }: PostProps) {
       {/** user Image */}
       <img src={post.userImg} alt="" className="rounded-full h-11 w-11 mr-4" />
       {/** right side  */}
-      <div className="w-full">
+      <div className="lg:w-full sm:w-[90%] pr-20 xl:pr-0 md:w-[75%] ">
         {/** Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between ">
           {/** post user info */}
           <div className="flex space-x-1 whitespace-nowrap items-center">
             <h1 className="font-bold text-[15px] sm:text-[16px] hover:underline">
@@ -49,7 +49,7 @@ export default function Post({ post }: PostProps) {
         <img
           src={post.img}
           alt="nature images"
-          className="rounded-2xl mr-2 w-full"
+          className="rounded-2xl lg:mr-2 lg:w-full md:w-auto md:m-0 "
         />
         {/** icons */}
         <div className="flex justify-between text-gray-500 p-2">

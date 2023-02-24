@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Inter } from "@next/font/google";
 import Sidebar from "@/components/sidebar";
 import Feed from "@/components/feed";
+import Widget from "@/components/widget";
 //import styles from "@/styles/Home.module.css";
 
 //const inter = Inter({ subsets: ["latin"] });
@@ -21,6 +22,8 @@ export default function Home() {
         <Sidebar />
         {/** Feed Section */}
         <Feed />
+        {/** Widgets */}
+        <Widget />
       </main>
     </>
   );
