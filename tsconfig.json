@@ -16,7 +16,11 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@heroicons/solid/*": ["./node_modules/@heroicons/solid/dist/*.js"],
+      "@heroicons/outline/*": ["./node_modules/@heroicons/outline/dist/*.js"],
+      "@heroicons/sharp/*": ["./node_modules/@heroicons/sharp/dist/*.js"],
+      "@heroicons/duotone/*": ["./node_modules/@heroicons/duotone/dist/*.js"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
