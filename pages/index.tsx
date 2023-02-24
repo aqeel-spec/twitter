@@ -5,11 +5,16 @@ import Sidebar from "@/components/sidebar";
 import Feed from "@/components/feed";
 import Widget from "@/components/widget";
 //import styles from "@/styles/Home.module.css";
+import { HomeProps, NewsData, RandomUser } from "@/type/postType";
+import { GetServerSideProps } from "next";
 
-//const inter = Inter({ subsets: ["latin"] });
-import { HomeProps } from "@/type/postType";
-
-export default function Home({ newsData }: HomeProps) {
+export default function Home({
+  newsData,
+  randomUserData,
+}: {
+  newsData: any;
+  randomUserData: any;
+}) {
   return (
     <>
       <Head>
@@ -24,20 +29,28 @@ export default function Home({ newsData }: HomeProps) {
         {/** Feed Section */}
         <Feed />
         {/** Widgets */}
-        <Widget newsData={newsData.articles} />
+        <Widget newsData={newsData.articles} randomUserData={randomUserData} />
       </main>
     </>
   );
 }
 
 // https://saurav.tech/NewsAPI/top-headlines/category/health/in.json
-export async function getServerSideProps() {
-  const newsData = await fetch(
+export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
+  // Fetch random user data from the API
+  const randomUserData: RandomUser = await fetch(
+    "https://randomuser.me/api/?results=30&inc=name,login,picture"
+  ).then((res) => res.json());
+
+  // Fetch news data from the API
+  const newsData: NewsData = await fetch(
     "https://saurav.tech/NewsAPI/top-headlines/category/business/us.json"
   ).then((res) => res.json());
+
   return {
     props: {
       newsData,
+      randomUserData,
     },
   };
-}
+};
