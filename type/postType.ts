@@ -68,7 +68,7 @@ export type PostTest = {
   userImg: string
   image: string
   text: string
-  timestamp?: { seconds: number; nanoseconds: number }
+  timeStamp?: { seconds: number; nanoseconds: number }
 }
 
 export interface Post {

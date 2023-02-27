@@ -1,6 +1,5 @@
 import { SparklesIcon } from "@heroicons/react/outline";
 import Input from "./input";
-//import Post from "./post";
 import { useEffect, useState } from "react";
 import {
   DocumentData,
@@ -17,19 +16,6 @@ import Post from "./post";
 function Feed() {
   const [posts, setPosts] = useState<DocumentData>([]);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     const colRef = collection(db, "posts");
-  //     const snapshots = await getDocs(colRef);
-  //     const docs = snapshots.docs.map((doc) => {
-  //       const data = doc.data();
-  //       data.id = doc.id;
-  //       return data;
-  //     });
-  //     setPosts(docs);
-  //     console.log(docs);
-  //   })();
-  // }, []);
   useEffect(
     () =>
       onSnapshot(collection(db, "posts"), (snapshot) => {
@@ -43,21 +29,7 @@ function Feed() {
       }),
     []
   );
-  //const [posts, setPosts] = useState<DocumentData>([]);
-  // useEffect(
-  //   () =>
-  //     onSnapshot(
-  //       query(collection(db, "posts"), orderBy("timestamp", "desc")),
-  //       (snapshot) => {
-  //         setPosts(snapshot.docs.map((doc) => {
-  //           const data = doc.data();
-  //           data.id = doc.id
-  //           return data
-  //         }));
-  //       }
-  //     ),
-  //   []
-  // );
+  // orderBy("timestamp", "desc")
 
   return (
     <div className="xl:ml-[340px] border-x border-gray-200 xl:min-w-[576px] sm:ml-[73px] flex-grow max-w-xl ">
@@ -71,9 +43,6 @@ function Feed() {
       {posts.map((post: any) => (
         <Post key={post.id} post={post} />
       ))}
-      {/* {posts.map((post) => (
-        <Post key={post.id} post={post} />
-      ))} */}
     </div>
   );
 }
