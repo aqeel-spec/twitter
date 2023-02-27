@@ -97,7 +97,7 @@ export default function Input() {
               <div className="relative ">
                 {!loading && (
                   <XIcon
-                    className={`h-7 cursor-pointer left-0 ml-[-16px] text-gray-400  absolute  rounded-full  hover:text-red-300 mt-[-15px]`}
+                    className={`h-7 border border-white cursor-pointer left-0 ml-[-16px] text-gray-400  absolute  rounded-full  hover:text-red-300 mt-[-15px]`}
                     onClick={() => setSelectedFile(null)}
                   />
                 )}

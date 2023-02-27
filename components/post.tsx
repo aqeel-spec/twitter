@@ -6,19 +6,39 @@ import {
   ShareIcon,
   TrashIcon,
 } from "@heroicons/react/outline";
+import { Timestamp } from "firebase/firestore";
+import { PostTest, PostType } from "@/type/postType";
+import firebase from "firebase/app";
+import "firebase/firestore";
+import Moment from "react-moment";
+// interface Post {
+//   id: string;
+//   image: string;
+//   name: string;
+//   text: string;
+//   timeStamp: firebase.firestore.Timestamp | undefined;
+//   userImg: string;
+//   username: string;
+// }
 
-type Post = {
-  id: string | number;
-  name: string;
-  userName: string;
-  userImg: string;
-  img: string;
-  text: string;
-  timestamp: string;
-};
-type PostProps = {
-  post: Post;
-};
+// interface FirebasePostData {
+//   id: string;
+//   image: string;
+//   name: string;
+//   text: string;
+//   timeStamp: {
+//     seconds: number;
+//     nanoseconds: number;
+//   };
+//   userImg: string;
+//   username: string;
+// }
+
+interface PostProps {
+  post: PostTest;
+}
+
+import { DocumentData } from "firebase/firestore";
 export default function Post({ post }: PostProps) {
   return (
     <div className="flex p-3 cursor-pointer border-b border-gray-200 ">
@@ -33,9 +53,9 @@ export default function Post({ post }: PostProps) {
             <h1 className="font-bold text-[15px] sm:text-[16px] hover:underline">
               {post.name}
             </h1>
-            <span className="text-sm sm:text-[15px] ">@{post.userName} - </span>
+            <span className="text-sm sm:text-[15px] ">@{post.username} - </span>
             <span className="text-sm sm:text-[15px] hover:underline">
-              {post.timestamp}
+              <Moment fromNow>{post.timestamp?.toDate()}</Moment>
             </span>
           </div>
           {/** dot icon */}
@@ -47,7 +67,7 @@ export default function Post({ post }: PostProps) {
         </p>
         {/** post Image */}
         <img
-          src={post.img}
+          src={post.image}
           alt="nature images"
           className="rounded-2xl lg:mr-2 lg:w-full md:w-auto md:m-0 "
         />

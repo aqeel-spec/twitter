@@ -61,3 +61,32 @@ export interface RandomUser {
     results: Results[]
   }
 }
+export type PostTest = {
+  id: string | number
+  name: string
+  username: string
+  userImg: string
+  image: string
+  text: string
+  timestamp?: { seconds: number; nanoseconds: number }
+}
+
+export interface Post {
+  id: string | number
+  name: string
+  userName: string
+  userImg: string
+  img: string
+  text: string
+  timestamp: { seconds: number; nanoseconds: number }
+}
+
+export type PostType = {
+  id: string | number
+  name: string
+  userName: string
+  userImg: string
+  img: string
+  text: string
+  timestamp: { seconds: number; nanoseconds: number } | undefined
+}
