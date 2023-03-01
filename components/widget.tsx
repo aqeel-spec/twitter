@@ -4,6 +4,7 @@ import { HomeProps } from "@/type/postType";
 import { NewsData } from "@/type/postType";
 import News from "./news";
 import { RandomUser } from "@/type/postType";
+import { AnimatePresence, motion } from "framer-motion";
 
 // interface WidgetProps {
 //   newsData: NewsData["articles"]; // We only need the "articles" array from the NewsData object
@@ -32,9 +33,20 @@ export default function Widget({ newsData, randomUserData }: WidgetProps) {
       </div>
       <div className="text-ray-700 space-y-3 bg-gray-100 rounded-xl pt-2 lg:w-[90%] md:w-[80%] sm:w-[75%]">
         <h4 className="font-bold text-xl px-4">What's happening</h4>
-        {newsData.slice(0, articleNum).map((article) => (
-          <News key={article.title} article={article} />
-        ))}
+        <AnimatePresence>
+          {newsData.slice(0, articleNum).map((article) => (
+            <motion.div
+              key={article.title}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1 }}
+            >
+              <News key={article.title} article={article} />
+            </motion.div>
+          ))}
+        </AnimatePresence>
+
         <button
           onClick={() => setArticleNum(articleNum + 3)}
           className="text-blue-300 pl-4 pb-3 hover:text-blue-400"
@@ -44,30 +56,41 @@ export default function Widget({ newsData, randomUserData }: WidgetProps) {
       </div>
       <div className="text-gray-700 sticky top-16 space-y-3 bg-gray-100 pt-2 rounded-xl lg:w-[90%] md:w-[80%] sm:w-[75%]  ">
         <h4 className="font-bold text-xl px-4 ">Who to follow</h4>
-        {data.slice(0, randomUserNum).map((rUser) => (
-          <div
-            key={rUser.login.username}
-            className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-200"
-          >
-            <img
-              className="rounded-full"
-              width="40"
-              src={rUser.picture.thumbnail}
-              alt="user thumbnail images"
-            />
-            <div className="truncate ml-4">
-              <h4 className="font-bold hover:underline  leading-5 text-[14px] truncate">
-                {rUser.login.username}
-              </h4>
-              <h5 className="text-[13px] text-gray-500 truncate">
-                {rUser.name.first + " " + rUser.name.last}
-              </h5>
-            </div>
-            <button className="ml-auto bg-black text-white rounded-full text-sm px-3.5 py-1.5 font-bold ">
-              Follow
-            </button>
-          </div>
-        ))}
+        <AnimatePresence>
+          {data.slice(0, randomUserNum).map((rUser) => (
+            <motion.div
+              key={rUser.login.username}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1 }}
+            >
+              <div
+                key={rUser.login.username}
+                className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-200 transition duration-500 ease-out"
+              >
+                <img
+                  className="rounded-full"
+                  width="40"
+                  src={rUser.picture.thumbnail}
+                  alt="user thumbnail images"
+                />
+                <div className="truncate ml-4">
+                  <h4 className="font-bold hover:underline  leading-5 text-[14px] truncate">
+                    {rUser.login.username}
+                  </h4>
+                  <h5 className="text-[13px] text-gray-500 truncate">
+                    {rUser.name.first + " " + rUser.name.last}
+                  </h5>
+                </div>
+                <button className="ml-auto bg-black text-white rounded-full text-sm px-3.5 py-1.5 font-bold ">
+                  Follow
+                </button>
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+
         <button
           onClick={() => setRandomUserNum(randomUserNum + 3)}
           className="text-blue-300 pl-4 pb-3 hover:text-blue-400 "

@@ -1,3 +1,4 @@
+"use client";
 import {
   ChartBarIcon,
   ChatIcon,
@@ -23,18 +24,34 @@ import {
   onSnapshot,
   collection,
   deleteDoc,
+  getDocs,
+  getDoc,
+  updateDoc,
+  arrayRemove,
 } from "firebase/firestore";
 import { useSession, signIn } from "next-auth/react";
-import { db } from "@/firebase";
+import { db, storage } from "@/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import { getDatabase, ref, onValue } from "firebase/database";
+import { useRecoilState } from "recoil";
+import { modelState } from "../atom/modelAtom";
+import {
+  FirebaseStorage,
+  StorageReference,
+  deleteObject,
+  getStorage,
+} from "firebase/storage";
 
 export default function Post({ post }: PostProps) {
   const { data: session } = useSession();
   const [likes, setLikes] = useState<DocumentData>([]);
   const [hasLiked, setHasLiked] = useState<DocumentData>([]);
+  // session?.user.uid === post.id;
+  const [idsData, setIdsData] = useState<any>([]);
+  const [open, setOpen] = useRecoilState(modelState);
+  // get data from database
 
-  // get liked data
   useEffect(() => {
     const unsubsscribe = onSnapshot(
       collection(db, "posts", post.id, "likes"),
@@ -60,6 +77,33 @@ export default function Post({ post }: PostProps) {
       }
     } else {
       signIn();
+    }
+  }
+  ////////////// DALETE POST /////////////////
+  (async () => {
+    const docRef = doc(db, "posts", post.id);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const idData = docSnap.data();
+      setIdsData(idData);
+      // console.log("Document data:", docSnap.data());
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("No such document!");
+    }
+  })();
+  // delete post for admin
+  async function deletePost() {
+    if (window.confirm("Are U sure you want to delete this post?")) {
+      await deleteDoc(doc(db, "posts", post.id));
+      //  *** ___ if image exists then delete it ___ ***
+      // if (post.image) {
+      //   // const storage2: FirebaseStorage = getStorage();
+      //   await deleteObject(ref(storage, `posts/${post.id}/image`));
+      //   console.log("image id :", post.id);
+      //   //await deleteObject(ref(storage2, `posts/${post.id}/image`));
+      // }
     }
   }
   return (
@@ -88,15 +132,29 @@ export default function Post({ post }: PostProps) {
           {post.text}
         </p>
         {/** post Image */}
-        <img
-          src={post.image}
-          alt="nature images"
-          className="rounded-2xl lg:mr-2 lg:w-full md:w-auto md:m-0 "
-        />
+        {post.image && (
+          <img
+            src={post.image}
+            alt="nature images"
+            className="rounded-2xl lg:mr-2 lg:w-full md:w-auto md:m-0 "
+          />
+        )}
         {/** icons */}
         <div className="flex justify-between text-gray-500 p-2">
-          <ChatIcon className="h-9 w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100" />
-          <TrashIcon className="h-9 w-9 hoverEffect p-2 hover:text-red-500 hover:bg-red-100" />
+          <ChatIcon
+            onClick={() => setOpen(!open)}
+            className="h-9 w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100"
+          />
+          {/* {idsData.map((idData: any) => ( */}
+          {session?.user.uid === idsData.id && (
+            <div className="">
+              <TrashIcon
+                onClick={deletePost}
+                className="h-9 w-9 hoverEffect p-2 hover:text-red-500 hover:bg-red-100"
+              />
+            </div>
+          )}
+          {/* ))} */}
           <div className="flex items-center ">
             {hasLiked ? (
               <HeartIcFilled

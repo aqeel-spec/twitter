@@ -7,6 +7,7 @@ import Widget from "@/components/widget";
 //import styles from "@/styles/Home.module.css";
 import { HomeProps, NewsData, RandomUser } from "@/type/postType";
 import { GetServerSideProps } from "next";
+import CommitModel from "@/components/commitModel";
 
 export default function Home({
   newsData,
@@ -30,6 +31,9 @@ export default function Home({
         <Feed />
         {/** Widgets */}
         <Widget newsData={newsData.articles} randomUserData={randomUserData} />
+
+        {/** Model for commits */}
+        <CommitModel />
       </main>
     </>
   );

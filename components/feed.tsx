@@ -12,6 +12,7 @@ import {
 import { db } from "@/firebase";
 import { PostTest, PostType } from "@/type/postType";
 import Post from "./post";
+import { AnimatePresence, motion } from "framer-motion";
 
 function Feed() {
   const [posts, setPosts] = useState<DocumentData>([]);
@@ -40,9 +41,19 @@ function Feed() {
         </div>
       </div>
       <Input />
-      {posts.map((post: any) => (
-        <Post key={post.id} post={post} />
-      ))}
+      <AnimatePresence>
+        {posts.map((post: any) => (
+          <motion.div
+            key={post.id}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1 }}
+          >
+            <Post key={post.id} post={post} />
+          </motion.div>
+        ))}
+      </AnimatePresence>
     </div>
   );
 }
