@@ -10,9 +10,18 @@ import {
 } from "@heroicons/react/outline";
 import { useEffect, useState } from "react";
 import { db } from "@/firebase";
-import { DocumentData, doc, getDoc, onSnapshot } from "firebase/firestore";
+import {
+  DocumentData,
+  doc,
+  getDoc,
+  onSnapshot,
+  addDoc,
+  collection,
+  serverTimestamp,
+} from "firebase/firestore";
 import Moment from "react-moment";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 export default function CommitModel() {
   const [open, setOpen] = useRecoilState(modelState);
@@ -21,27 +30,24 @@ export default function CommitModel() {
   const { data: session } = useSession();
   const [input, setInput] = useState("");
 
-  useEffect(() => {
-    // (async () => {
-    //   const docRef = doc(db, "posts", postId);
-    //   const docSnap = await getDoc(docRef);
+  const router = useRouter();
 
-    //   if (docSnap.exists()) {
-    //     const idData = docSnap.data();
-    //     setPost(idData);
-    //     // console.log("Document data:", docSnap.data());
-    //   } else {
-    //     // doc.data() will be undefined in this case
-    //     console.log("No such document!");
-    //   }
-    // })();
+  useEffect(() => {
     onSnapshot(doc(db, "posts", postId), (snapshot) => {
       setPost(snapshot);
     });
   }, [postId, db]);
   // send commit to db
-  function sendCommit() {
-    console.log("reply sent");
+  async function sendCommit() {
+    await addDoc(collection(db, "posts", postId, "commits"), {
+      commit: input,
+      name: session?.user.name,
+      userImg: session?.user.image,
+      timestamp: serverTimestamp(),
+    });
+    setOpen(false);
+    setInput("");
+    router.push(`posts/${postId}`);
   }
 
   return (
@@ -81,7 +87,7 @@ export default function CommitModel() {
               </div>
             </div>
             <p className="text-gray-500 text-[15px] sm:text-[16px] ml-16 mb-2">
-              {post?.data().text}
+              {post?.data()?.text}
             </p>
             <div className="flex  p-3 space-x-3">
               <img

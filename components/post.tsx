@@ -47,6 +47,7 @@ export default function Post({ post }: PostProps) {
   const { data: session } = useSession();
   const [likes, setLikes] = useState<DocumentData>([]);
   const [hasLiked, setHasLiked] = useState<DocumentData>([]);
+  const [commits, setCommits] = useState<DocumentData>([]);
   // session?.user.uid === post.id;
   const [idsData, setIdsData] = useState<any>([]);
   const [open, setOpen] = useRecoilState(modelState);
@@ -58,6 +59,13 @@ export default function Post({ post }: PostProps) {
     const unsubsscribe = onSnapshot(
       collection(db, "posts", post.id, "likes"),
       (snapshot) => setLikes(snapshot.docs)
+    );
+  }, [db]);
+  // commits counter here
+  useEffect(() => {
+    const unsubsscribe = onSnapshot(
+      collection(db, "posts", post.id, "commits"),
+      (snapshot) => setCommits(snapshot.docs)
     );
   }, [db]);
   useEffect(() => {
@@ -113,7 +121,7 @@ export default function Post({ post }: PostProps) {
       {/** user Image */}
       <img src={post.userImg} alt="" className="rounded-full h-11 w-11 mr-4" />
       {/** right side  */}
-      <div className="lg:w-full sm:w-[90%] pr-20 xl:pr-0 md:w-[75%] ">
+      <div className="lg:w-full sm:w-[90%] pr-20 xl:pr-0 md:w-[75%] flex-1">
         {/** Header */}
         <div className="flex items-center justify-between ">
           {/** post user info */}
@@ -143,17 +151,22 @@ export default function Post({ post }: PostProps) {
         )}
         {/** icons */}
         <div className="flex justify-between text-gray-500 p-2">
-          <ChatIcon
-            onClick={() => {
-              if (!session) {
-                signIn();
-              } else {
-                setPostId(post.id);
-                setOpen(!open);
-              }
-            }}
-            className="h-9 w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100"
-          />
+          <div className="flex items-center select-none ">
+            <ChatIcon
+              onClick={() => {
+                if (!session) {
+                  signIn();
+                } else {
+                  setPostId(post.id);
+                  setOpen(!open);
+                }
+              }}
+              className="h-9 w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100"
+            />
+            {commits.length > 0 && (
+              <span className="text-sm">{commits.length}</span>
+            )}
+          </div>
           {/* {idsData.map((idData: any) => ( */}
           {session?.user.uid === idsData.id && (
             <div className="">
