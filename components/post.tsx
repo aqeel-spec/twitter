@@ -35,7 +35,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { getDatabase, ref, onValue } from "firebase/database";
 import { useRecoilState } from "recoil";
-import { modelState } from "../atom/modelAtom";
+import { modelState, postIdState } from "../atom/modelAtom";
 import {
   FirebaseStorage,
   StorageReference,
@@ -50,6 +50,8 @@ export default function Post({ post }: PostProps) {
   // session?.user.uid === post.id;
   const [idsData, setIdsData] = useState<any>([]);
   const [open, setOpen] = useRecoilState(modelState);
+  const [postId, setPostId] = useRecoilState(postIdState);
+
   // get data from database
 
   useEffect(() => {
@@ -142,7 +144,14 @@ export default function Post({ post }: PostProps) {
         {/** icons */}
         <div className="flex justify-between text-gray-500 p-2">
           <ChatIcon
-            onClick={() => setOpen(!open)}
+            onClick={() => {
+              if (!session) {
+                signIn();
+              } else {
+                setPostId(post.id);
+                setOpen(!open);
+              }
+            }}
             className="h-9 w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100"
           />
           {/* {idsData.map((idData: any) => ( */}
