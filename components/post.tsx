@@ -16,6 +16,7 @@ import { HeartIcon as HeartIcFilled } from "@heroicons/react/solid";
 
 interface PostProps {
   post: PostTest;
+  id: any;
 }
 
 import {
@@ -36,6 +37,7 @@ import { useEffect, useState } from "react";
 import { getDatabase, ref, onValue } from "firebase/database";
 import { useRecoilState } from "recoil";
 import { modelState, postIdState } from "../atom/modelAtom";
+import { useRouter } from "next/router";
 import {
   FirebaseStorage,
   StorageReference,
@@ -43,7 +45,7 @@ import {
   getStorage,
 } from "firebase/storage";
 
-export default function Post({ post }: PostProps) {
+export default function Post({ post, id }: PostProps) {
   const { data: session } = useSession();
   const [likes, setLikes] = useState<DocumentData>([]);
   const [hasLiked, setHasLiked] = useState<DocumentData>([]);
@@ -52,36 +54,39 @@ export default function Post({ post }: PostProps) {
   const [idsData, setIdsData] = useState<any>([]);
   const [open, setOpen] = useRecoilState(modelState);
   const [postId, setPostId] = useRecoilState(postIdState);
+  const router = useRouter();
 
   // get data from database
 
   useEffect(() => {
     const unsubsscribe = onSnapshot(
-      collection(db, "posts", post.id, "likes"),
+      collection(db, "posts", id, "likes"),
       (snapshot) => setLikes(snapshot.docs)
     );
   }, [db]);
   // commits counter here
   useEffect(() => {
     const unsubsscribe = onSnapshot(
-      collection(db, "posts", post.id, "commits"),
+      collection(db, "posts", id, "commits"),
       (snapshot) => setCommits(snapshot.docs)
     );
   }, [db]);
-  useEffect(() => {
-    setHasLiked(
-      likes.findIndex((like) => like.id === session?.user.uid) !== -1
-    );
-  }, [likes]);
+  useEffect(
+    () =>
+      setHasLiked(
+        likes.findIndex((like) => like.id === session?.user.uid) !== -1
+      ),
+    [likes]
+  );
   const data = { username: session?.user.username };
   // like post function
   async function likePost() {
     if (session) {
       if (hasLiked) {
-        await deleteDoc(doc(db, "posts", post.id, "likes", session?.user.uid));
+        await deleteDoc(doc(db, "posts", id, "likes", `${session?.user.uid}`));
       } else {
         await setDoc(
-          doc(db, "posts", post.id, "likes", session?.user.uid),
+          doc(db, "posts", id, "likes", `${session?.user.uid}`),
           data
         );
       }
@@ -91,7 +96,7 @@ export default function Post({ post }: PostProps) {
   }
   ////////////// DALETE POST /////////////////
   (async () => {
-    const docRef = doc(db, "posts", post.id);
+    const docRef = doc(db, "posts", id);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
@@ -106,14 +111,13 @@ export default function Post({ post }: PostProps) {
   // delete post for admin
   async function deletePost() {
     if (window.confirm("Are U sure you want to delete this post?")) {
-      await deleteDoc(doc(db, "posts", post.id));
+      await deleteDoc(doc(db, "posts", id));
       //  *** ___ if image exists then delete it ___ ***
       // if (post.image) {
-      //   // const storage2: FirebaseStorage = getStorage();
-      //   await deleteObject(ref(storage, `posts/${post.id}/image`));
-      //   console.log("image id :", post.id);
-      //   //await deleteObject(ref(storage2, `posts/${post.id}/image`));
+      //   await deleteObject(ref(storage, `posts/${id}/image`));
+      //   console.log("image id :", id);
       // }
+      router.push("/");
     }
   }
   return (
@@ -131,7 +135,7 @@ export default function Post({ post }: PostProps) {
             </h1>
             <span className="text-sm sm:text-[15px] ">@{post.username} - </span>
             <span className="text-sm sm:text-[15px] hover:underline">
-              <Moment fromNow>{post.timeStamp?.toDate()}</Moment>
+              <Moment fromNow>{post?.timeStamp?.toDate()}</Moment>
             </span>
           </div>
           {/** dot icon */}
@@ -139,12 +143,12 @@ export default function Post({ post }: PostProps) {
         </div>
         {/** post text */}
         <p className="text-gray-800  text-[15px] sm:text-[16px] mb-2 ">
-          {post.text}
+          {post?.text}
         </p>
         {/** post Image */}
-        {post.image && (
+        {post?.image && (
           <img
-            src={post.image}
+            src={post?.image}
             alt="nature images"
             className="rounded-2xl lg:mr-2 lg:w-full md:w-auto md:m-0 "
           />
@@ -157,7 +161,7 @@ export default function Post({ post }: PostProps) {
                 if (!session) {
                   signIn();
                 } else {
-                  setPostId(post.id);
+                  setPostId(id);
                   setOpen(!open);
                 }
               }}
