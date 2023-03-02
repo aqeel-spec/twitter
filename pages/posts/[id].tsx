@@ -10,7 +10,16 @@ import { useRouter } from "next/router";
 import Post from "@/components/post";
 import { useEffect, useState } from "react";
 import { db } from "@/firebase";
-import { DocumentData, doc, getDoc, onSnapshot } from "firebase/firestore";
+import {
+  DocumentData,
+  doc,
+  getDoc,
+  onSnapshot,
+  query,
+  collection,
+  orderBy,
+} from "firebase/firestore";
+import Comment from "@/components/commits";
 
 export default function PostPage({
   newsData,
@@ -22,6 +31,7 @@ export default function PostPage({
   const [postUser, setPosts] = useState<DocumentData | undefined>([]);
   const router = useRouter();
   const { id } = router.query;
+  const [commits, setCommits] = useState<DocumentData>([]);
   useEffect(
     () =>
       onSnapshot(doc(db, "posts", `${id}`), (snapshot) =>
@@ -29,6 +39,17 @@ export default function PostPage({
       ),
     [db, id]
   );
+  // get all commits from the post
+  useEffect(() => {
+    onSnapshot(
+      query(
+        collection(db, "posts", `${id}`, "commits"),
+        orderBy("timestamp", "desc")
+      ),
+      (snapshot) => setCommits(snapshot.docs)
+    );
+  }, [db, id]);
+
   return (
     <>
       <Head>
@@ -51,6 +72,17 @@ export default function PostPage({
             </h2>
           </div>
           {postUser && <Post id={id} post={postUser} />}
+          {commits.length > 0 && (
+            <div className="">
+              {commits.map((commit: any) => (
+                <Comment
+                  key={commit.id}
+                  id={commit.id}
+                  commit={commit.data()}
+                />
+              ))}
+            </div>
+          )}
         </div>
         {/** Widgets */}
         <Widget newsData={newsData.articles} randomUserData={randomUserData} />
