@@ -20,6 +20,7 @@ import {
   orderBy,
 } from "firebase/firestore";
 import Comment from "@/components/commits";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function PostPage({
   newsData,
@@ -74,14 +75,24 @@ export default function PostPage({
           {postUser && <Post id={id} post={postUser} />}
           {commits.length > 0 && (
             <div className="">
-              {commits.map((commit: any) => (
-                <Comment
-                  key={commit.id}
-                  commitId={commit.id}
-                  originalPostId={id}
-                  commit={commit.data()}
-                />
-              ))}
+              <AnimatePresence>
+                {commits.map((commit: any) => (
+                  <motion.div
+                    key={commit.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 1 }}
+                  >
+                    <Comment
+                      key={commit.id}
+                      commitId={commit.id}
+                      originalPostId={id}
+                      commit={commit.data()}
+                    />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
             </div>
           )}
         </div>
