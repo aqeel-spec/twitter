@@ -92,11 +92,13 @@ export default function CommitModel() {
               {post?.data()?.text}
             </p>
             <div className="flex  p-3 space-x-3">
-              <img
-                className="rounded-full  h-10 w-10 cursor-pointer hover:brightness-95"
-                src={session?.user?.image}
-                alt="user Image"
-              />
+              {session && (
+                <img
+                  className="rounded-full  h-10 w-10 cursor-pointer hover:brightness-95"
+                  src={session?.user?.image}
+                  alt="user Image"
+                />
+              )}
               <div className="w-full divide-y divide-gray-200">
                 <div className="">
                   <textarea
