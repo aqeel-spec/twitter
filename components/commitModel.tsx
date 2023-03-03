@@ -92,7 +92,7 @@ export default function CommitModel() {
               {post?.data()?.text}
             </p>
             <div className="flex  p-3 space-x-3">
-              {session && (
+              {session?.user.image && (
                 <img
                   className="rounded-full  h-10 w-10 cursor-pointer hover:brightness-95"
                   src={session?.user?.image}
