@@ -16,20 +16,36 @@ import { AnimatePresence, motion } from "framer-motion";
 
 function Feed() {
   const [posts, setPosts] = useState<DocumentData>([]);
-
   useEffect(
     () =>
-      onSnapshot(collection(db, "posts"), (snapshot) => {
-        const docs = snapshot.docs.map((doc) => {
-          const data = doc.data();
-          data.id = doc.id;
-          return data;
-        });
-        setPosts(docs);
-        console.log(docs);
-      }),
+      onSnapshot(
+        query(collection(db, "posts"), orderBy("timeStamp", "desc")),
+        (snapshot) => {
+          const docs = snapshot.docs.map((doc) => {
+            const data = doc.data();
+            data.id = doc.id;
+            return data;
+          });
+          setPosts(docs);
+          console.log(docs);
+        }
+      ),
     []
   );
+
+  // useEffect(
+  //   () =>
+  //     onSnapshot(collection(db, "posts"), (snapshot) => {
+  //       const docs = snapshot.docs.map((doc) => {
+  //         const data = doc.data();
+  //         data.id = doc.id;
+  //         return data;
+  //       });
+  //       setPosts(docs);
+  //       console.log(docs);
+  //     }),
+  //   []
+  // );
   // orderBy("timestamp", "desc")
 
   return (
@@ -59,26 +75,3 @@ function Feed() {
 }
 
 export default Feed;
-
-// const posts = [
-//   {
-//     id: "1",
-//     name: "Aqeel Shahzad",
-//     userName: "AqeelSh1215",
-//     userImg:
-//       "https://pbs.twimg.com/profile_images/1572524799271788544/BOVrbu5t_400x400.jpg",
-//     img: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bmF0dXJlfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=400&q=60",
-//     text: "nice view!",
-//     timestamp: "2 hours ago",
-//   },
-//   {
-//     id: "2",
-//     name: "Aqeel Shahzad",
-//     userName: "AqeelSh1215",
-//     userImg:
-//       "https://pbs.twimg.com/profile_images/1572524799271788544/BOVrbu5t_400x400.jpg",
-//     img: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTV8fG5hdHVyZXxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=400&q=60",
-//     text: "wow!",
-//     timestamp: "2 days ago",
-//   },
-// ];
