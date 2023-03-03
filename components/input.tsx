@@ -78,7 +78,7 @@ export default function Input() {
           <img
             onClick={() => signOut()}
             className="rounded-full  h-10 w-10 cursor-pointer hover:brightness-95"
-            src={session?.user?.image}
+            src={session?.user.image}
             alt="user Image"
           />
           <div className="w-full divide-y divide-gray-200">
