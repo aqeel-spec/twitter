@@ -142,12 +142,16 @@ export default function Post({ post, id }: PostProps) {
           <DotsHorizontalIcon className="h-10 p-2 hoverEffect w-10 hover:bg-sky-100 hover:text-sky-500" />
         </div>
         {/** post text */}
-        <p className="text-gray-800  text-[15px] sm:text-[16px] mb-2 ">
+        <p
+          onClick={() => router.push(`/posts/${id}`)}
+          className="text-gray-800  text-[15px] sm:text-[16px] mb-2 "
+        >
           {post?.text}
         </p>
         {/** post Image */}
         {post?.image && (
           <img
+            onClick={() => router.push(`/posts/${id}`)}
             src={post?.image}
             alt="nature images"
             className="rounded-2xl lg:mr-2 lg:w-full md:w-auto md:m-0 "

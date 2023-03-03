@@ -44,6 +44,8 @@ export default function CommitModel() {
       name: session?.user.name,
       userImg: session?.user.image,
       timestamp: serverTimestamp(),
+      username: session?.user.username,
+      userId: session?.user.uid,
     });
     setOpen(false);
     setInput("");

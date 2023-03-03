@@ -77,7 +77,8 @@ export default function PostPage({
               {commits.map((commit: any) => (
                 <Comment
                   key={commit.id}
-                  id={commit.id}
+                  commitId={commit.id}
+                  originalPostId={id}
                   commit={commit.data()}
                 />
               ))}
