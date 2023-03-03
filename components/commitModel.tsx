@@ -103,7 +103,7 @@ export default function CommitModel() {
                 <div className="">
                   <textarea
                     className="w-full border-none focus:ring-0 text-lg placeholder-gray-700 tracking-wide min-h-[50px] text-gray-700"
-                    rows="2"
+                    rows={2}
                     placeholder="Tweet your reply"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
