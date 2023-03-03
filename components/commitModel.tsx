@@ -28,7 +28,7 @@ export default function CommitModel() {
   const [postId] = useRecoilState(postIdState);
   const [post, setPost] = useState<DocumentData>({});
   const { data: session } = useSession();
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState<string>("");
 
   const router = useRouter();
 
