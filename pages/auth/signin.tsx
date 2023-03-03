@@ -3,6 +3,7 @@ import React from "react";
 import { Provider } from "next-auth/providers";
 import { GetServerSideProps } from "next/types";
 import Logo from "../../public/twitter_logo.svg";
+import Image from "next/image";
 // here is types of athentiation
 import { getProviders, signIn } from "next-auth/react";
 interface SignInProps {
@@ -10,6 +11,17 @@ interface SignInProps {
 }
 
 export default function Signin({ providers }: SignInProps) {
+  const myLoader = ({
+    src,
+    width,
+    height,
+  }: {
+    src: string;
+    width: number;
+    height: number;
+  }) => {
+    return `/${src}?w=${width}&h=${height}`;
+  };
   return (
     <div className="flex justify-center mt-20 space-x-4">
       <img

@@ -32,7 +32,7 @@ export default function Widget({ newsData, randomUserData }: WidgetProps) {
         </div>
       </div>
       <div className="text-ray-700 space-y-3 bg-gray-100 rounded-xl pt-2 lg:w-[90%] md:w-[80%] sm:w-[75%]">
-        <h4 className="font-bold text-xl px-4">What's happening</h4>
+        <h4 className="font-bold text-xl px-4">Whats happening</h4>
         <AnimatePresence>
           {newsData.slice(0, articleNum).map((article) => (
             <motion.div
