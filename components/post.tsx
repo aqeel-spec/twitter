@@ -15,7 +15,7 @@ import Moment from "react-moment";
 import { HeartIcon as HeartIcFilled } from "@heroicons/react/solid";
 
 interface PostProps {
-  post: PostTest;
+  post: PostTest | DocumentData;
   id: any;
 }
 
@@ -48,7 +48,7 @@ import {
 export default function Post({ post, id }: PostProps) {
   const { data: session } = useSession();
   const [likes, setLikes] = useState<DocumentData>([]);
-  const [hasLiked, setHasLiked] = useState<DocumentData>([]);
+  const [hasLiked, setHasLiked] = useState<DocumentData | boolean>([]);
   const [commits, setCommits] = useState<DocumentData>([]);
   // session?.user.uid === post.id;
   const [idsData, setIdsData] = useState<any>([]);
@@ -74,7 +74,7 @@ export default function Post({ post, id }: PostProps) {
   useEffect(
     () =>
       setHasLiked(
-        likes.findIndex((like) => like.id === session?.user.uid) !== -1
+        likes.findIndex((like: any) => like.id === session?.user.uid) !== -1
       ),
     [likes]
   );

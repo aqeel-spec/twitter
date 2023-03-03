@@ -31,7 +31,7 @@ export default function PostPage({
 }) {
   const [postUser, setPosts] = useState<DocumentData | undefined>([]);
   const router = useRouter();
-  const { id } = router.query;
+  const { id }: any = router.query;
   const [commits, setCommits] = useState<DocumentData>([]);
   useEffect(
     () =>

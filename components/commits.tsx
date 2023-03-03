@@ -64,7 +64,7 @@ export default function Commits({
 }: CommitProps) {
   const { data: session } = useSession();
   const [likes, setLikes] = useState<DocumentData>([]);
-  const [hasLiked, setHasLiked] = useState<DocumentData>([]);
+  const [hasLiked, setHasLiked] = useState<DocumentData | boolean>([]);
   // session?.user.uid === post.id;
   const [idsData, setIdsData] = useState<any>([]);
   const [open, setOpen] = useRecoilState(modelState);
