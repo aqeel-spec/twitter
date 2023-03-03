@@ -48,12 +48,14 @@ export default function Sidebar() {
           </button>
           {/** mini profile  */}
           <div className="hoverEffect  text-gray-700 flex items-center justify-center xl:justify-start mt-auto ">
-            <img
-              onClick={() => signOut()}
-              className="rounded-full  h-10 w-10 xl:mr-2"
-              src={session.user?.image}
-              alt="profile image"
-            />
+            {session.user.image && (
+              <img
+                onClick={() => signOut()}
+                className="rounded-full  h-10 w-10 xl:mr-2"
+                src={session.user?.image}
+                alt="profile image"
+              />
+            )}
             <div className="leading-5 hidden xl:inline ">
               <h4 className="font-bold">{session.user?.name}</h4>
               <p className="text-gray-500">@{session.user.username}</p>
