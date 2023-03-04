@@ -11,12 +11,17 @@ import { collection } from "firebase/firestore";
 import { db, storage } from "../firebase";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { AdvancedLoader } from "./icons/loaderIcon";
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
+import { GoogleProfile } from "next-auth/providers/google";
 
 export default function Input() {
   const { data: session } = useSession();
   const [input, setInput] = useState("");
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  // emogi popup
+  const [showEmoji, setShowEmogi] = useState(false);
 
   // file picker on post
   const filePickerRef = useRef<HTMLInputElement>(null);
@@ -46,6 +51,7 @@ export default function Input() {
       await updateDoc(doc(db, "posts", docRef.id), {
         image: downloadUrl,
       });
+
       // console.log("downloadUrl: ", downloadUrl);
     }
     // const imageRef = ref(storage, `posts/${docRef.id}/image`);
@@ -54,6 +60,7 @@ export default function Input() {
     //     const downloadUrl = await getDownloadURL(imageRef);
     //   });
     // }
+
     setInput("");
     setSelectedFile(null);
     setLoading(false);
@@ -70,7 +77,12 @@ export default function Input() {
     //    console.log(readerEvent.target?.result);
     //  };
   };
-
+  const addEmoji = (emoji: any) => {
+    const sym = emoji.unified.split("-");
+    const codeArray = sym.map((code: any) => parseInt(`0x${code}`, 16));
+    const emojiString = String.fromCodePoint(...codeArray);
+    setInput(input + emojiString);
+  };
   return (
     <>
       {session && (
@@ -132,8 +144,33 @@ export default function Input() {
                         onChange={addImgToPost}
                       />
                     </div>
-
-                    <EmojiHappyIcon className="h-10 w-10 hoverEffect p-2 text-sky-500 hover:bg-sky-100" />
+                    {/** Emoji section here */}
+                    <div className=" ">
+                      <EmojiHappyIcon
+                        onClick={() => setShowEmogi(!showEmoji)}
+                        className="h-10 w-10 hoverEffect p-2 text-sky-500 hover:bg-sky-100"
+                      />
+                      <div className="absolute z-50 ">
+                        {showEmoji && (
+                          <div className="">
+                            <Picker
+                              size={50}
+                              data={data}
+                              previewPosition={"none"}
+                              skinTonePosition="none"
+                              emojiSize={18}
+                              emojiButtonSize={28}
+                              // maxFrequency={0}
+                              maxFrequentRows={4}
+                              onEmojiSelect={addEmoji}
+                              navPosition={"bottom"}
+                              perLine={7}
+                              previewEmoji={"point_up"}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
                   <button
                     onClick={sendPost}
