@@ -22,6 +22,8 @@ import {
 import Moment from "react-moment";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
 
 export default function CommitModel() {
   const [open, setOpen] = useRecoilState(modelState);
@@ -29,6 +31,7 @@ export default function CommitModel() {
   const [post, setPost] = useState<DocumentData>({});
   const { data: session } = useSession();
   const [input, setInput] = useState<string>("");
+  const [showEmoji, setShowEmogi] = useState(false);
 
   const router = useRouter();
 
@@ -38,6 +41,12 @@ export default function CommitModel() {
     });
   }, [postId, db]);
   // send commit to db
+  const addEmoji = (emoji: any) => {
+    const sym = emoji.unified.split("-");
+    const codeArray = sym.map((code: any) => parseInt(`0x${code}`, 16));
+    const emojiString = String.fromCodePoint(...codeArray);
+    setInput(input + emojiString);
+  };
   async function sendCommit() {
     await addDoc(collection(db, "posts", postId, "commits"), {
       commit: input,
@@ -123,7 +132,32 @@ export default function CommitModel() {
                         /> */}
                     </div>
 
-                    <EmojiHappyIcon className="h-10 w-10 hoverEffect p-2 text-sky-500 hover:bg-sky-100" />
+                    <div className=" ">
+                      <EmojiHappyIcon
+                        onClick={() => setShowEmogi(!showEmoji)}
+                        className="h-10 w-10 hoverEffect p-2 text-sky-500 hover:bg-sky-100"
+                      />
+                      <div className="absolute z-50 ">
+                        {showEmoji && (
+                          <div className="">
+                            <Picker
+                              size={50}
+                              data={data}
+                              previewPosition={"none"}
+                              skinTonePosition="none"
+                              emojiSize={18}
+                              emojiButtonSize={28}
+                              // maxFrequency={0}
+                              maxFrequentRows={4}
+                              onEmojiSelect={addEmoji}
+                              navPosition={"bottom"}
+                              perLine={7}
+                              previewEmoji={"point_up"}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
                   <button
                     onClick={sendCommit}
