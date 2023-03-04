@@ -59,7 +59,7 @@ export default function Signin({ providers }: SignInProps) {
             <div className="px-4">
               <div className=" ">
                 {Object.values(providers).map((provider) => (
-                  <div className="">
+                  <div className="" key={provider.id}>
                     <div
                       key={provider.id}
                       className=" items-center border-2 border-gray-100 cursor-pointer z-50 px-12 py-2 w-fit rounded-full hover:bg-sky-100"
